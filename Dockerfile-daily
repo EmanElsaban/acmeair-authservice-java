@@ -1,4 +1,7 @@
 FROM openliberty/daily
+#FROM open-liberty:beta
+#FROM openliberty/daily:kernel-slim-java8-openj9-ubi
+#FROM open-liberty:20.0.0.12-full-java8-openj9
 
 # Config
 COPY --chown=1001:0 src/main/liberty/config/server.xml /config/server.xml

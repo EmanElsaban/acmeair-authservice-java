@@ -18,11 +18,19 @@ spec:
     spec:
       containers:
       - name: acmeair-authservice-java
-        image: acmeair-authservice-java:latest
+        image: emanelsabban/acmeair-microsvc:acmeair-authsvc3
+        #image: emanelsabban/acmeair-microsvc:acmeair-authservice-java
         ports:
           - containerPort: 9080
           - containerPort: 9443
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            memory: 400Mi
+            cpu: 1
+          requests:
+            memory: 400Mi
+            cpu: 400m
         env:
         - name: USERNAME
           value: admin
@@ -42,6 +50,9 @@ spec:
           value: '*=info'
         - name: LOGGING_FORMAT
           value: 'simple'
+        - name: JAVA_OPTIONS
+          #value: '-XX:+UseJITServer -XX:JITServerAddress=ibm-java-acceleration-server -XX:JITServerTimeout=10000 -Xjit:verbose={compilePerformance|JITServer},vlog=/tmp/vlog.txt'
+          value: '-Xjit:verbose={compilePerformance},vlog=/tmp/vlog.txt'        
         readinessProbe:
           httpGet:
             path: /health
@@ -54,6 +65,8 @@ spec:
             port: 9080
           initialDelaySeconds: 120
           periodSeconds: 15
+      nodeSelector:
+        chosen: "true"
 ---
 apiVersion: v1
 kind: Service
