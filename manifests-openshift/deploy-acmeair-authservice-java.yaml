@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: acmeair-authservice-java
-        image: emanelsabban/acmeair-microsvc:acmeair-authsvc3
+        image: docker.io/emanelsabban/acmeair-microsvc:acmeair-authservice2-java
         #image: emanelsabban/acmeair-microsvc:acmeair-authservice-java
         ports:
           - containerPort: 9080
@@ -26,10 +26,10 @@ spec:
         imagePullPolicy: IfNotPresent
         resources:
           limits:
-            memory: 400Mi
+            memory: 200Mi
             cpu: 1
           requests:
-            memory: 400Mi
+            memory: 200Mi
             cpu: 400m
         env:
         - name: USERNAME
@@ -51,19 +51,21 @@ spec:
         - name: LOGGING_FORMAT
           value: 'simple'
         - name: JAVA_OPTIONS
-          #value: '-XX:+UseJITServer -XX:JITServerAddress=ibm-java-acceleration-server -XX:JITServerTimeout=10000 -Xjit:verbose={compilePerformance|JITServer},vlog=/tmp/vlog.txt'
-          value: '-Xjit:verbose={compilePerformance},vlog=/tmp/vlog.txt'        
+          value: '-XX:+UseJITServer -XX:JITServerAddress=ibm-java-acceleration-server -XX:JITServerTimeout=10000 -Xjit:verbose={compilePerformance|JITServer},vlog=/tmp/vlog.txt'
+          #value: '-Xjit:verbose={compilePerformance},vlog=/tmp/vlog.txt'        
         readinessProbe:
           httpGet:
             path: /health
             port: 9080
-          initialDelaySeconds: 10
-          periodSeconds: 5
+          initialDelaySeconds: 15
+          timeoutSeconds: 50
+          periodSeconds: 15
         livenessProbe:
           httpGet:
             path: /health
             port: 9080
           initialDelaySeconds: 120
+          timeoutSeconds: 50
           periodSeconds: 15
       nodeSelector:
         chosen: "true"
